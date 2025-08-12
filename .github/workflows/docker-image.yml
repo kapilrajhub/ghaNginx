@@ -14,10 +14,10 @@ jobs:
      
      - name: Build the Nginx Docker image
        run: |
-         docker build . -t kapilrajhybrid/nginx:v2
+         docker build . -t kapilrajhybrid/nginx:latest
          
      - name: Publish image to Docker Hub 
        run: |
          docker login -u kapilrajhybrid -p ${{ secrets.DOCKER_HUB_TOKEN }}
-         docker push kapilrajhybrid/myNginx:latest
+         docker push kapilrajhybrid/nginx:latest
         
