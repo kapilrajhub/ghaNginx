@@ -10,10 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
      - name: checkout
-     - uses: actions/checkout@v1
+       uses: actions/checkout@v4
+     
      - name: Build the Nginx Docker image
        run: |
          docker build . -t Dockerfile --tag myNginx:latest
+         
      - name: Publish image to Docker Hub 
        run: |
          docker login -u kapilrajhybrid -p ${{ secrets.DOCKER_HUB_TOKEN }}
