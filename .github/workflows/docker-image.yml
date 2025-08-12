@@ -1,5 +1,4 @@
-name: Docker Image CI
-
+name: Nginx Build CI
 on:
   push:
     branches: [ "main" ]
@@ -7,12 +6,16 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+     - name: Checkout
+     - uses: actions/checkout@v1
+     - name: Build the Nginx Docker image
+       run: |
+         docker build . -t Dockerfile --tag myNginx:latest
+     - name: Publish image to Docker Hub 
+       run: |
+         docker login -u kapilrajhybrid -p ${{ secrets.DOCKER_HUB_TOKEN }}
+         docker push kapilrajhybrid/myNginx:latest
+        
