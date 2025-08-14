@@ -1,13 +1,17 @@
 name: Nginx Build CI
 on:
   workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: self-hosted
     steps:
-     - name: Build the Nginx Docker image
-       run: |
+    - name: Build the Nginx Docker image
+      run: |
          docker build . -t kapilrajhybrid/nginx:latest
          
      - name: Run Trivy vulnerability scanner
@@ -27,5 +31,4 @@ jobs:
      
      - name: Deploy Application in Kubernetes Cluster
        run: |  
-          kubectl get nodes
-        
+         kubectl apply -f ghaNginx/mynginxservice.yaml
