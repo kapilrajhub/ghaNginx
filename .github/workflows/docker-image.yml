@@ -31,4 +31,4 @@ jobs:
      
      - name: Deploy Application in Kubernetes Cluster
        run: |  
-         kubectl apply -f kubernetes/mynginxservice.yaml
+         kubectl apply -f https://github.com/kapilrajhub/ghaNginx/blob/main/kubernetes/mynginxservice.yaml
