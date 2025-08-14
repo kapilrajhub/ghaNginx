@@ -31,4 +31,7 @@ jobs:
        run: |
          docker login -u kapilrajhybrid -p ${{ secrets.DOCKER_HUB_TOKEN }}
          docker push kapilrajhybrid/nginx:latest
+     
+     - name: Deploy Application in Kubernetes Cluster
+        run: kubectl apply -f mynginxservice.yaml
         
