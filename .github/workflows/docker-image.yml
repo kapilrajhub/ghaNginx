@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
-    - name: Build the Nginx Docker image
+     - name: Build the Nginx Docker image
        run: |
          docker build . -t kapilrajhybrid/nginx:latest
          
