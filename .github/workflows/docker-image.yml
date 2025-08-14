@@ -33,5 +33,6 @@ jobs:
          docker push kapilrajhybrid/nginx:latest
      
      - name: Deploy Application in Kubernetes Cluster
-        run: kubectl apply -f mynginxservice.yaml
+       run: |  
+          kubectl apply -f mynginxservice.yaml
         
