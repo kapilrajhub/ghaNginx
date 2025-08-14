@@ -8,9 +8,9 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
-    - name: Build the Nginx Docker image
-      run: |
-         docker build . -t kapilrajhybrid/nginx:latest
+     - name: Build the Nginx Docker image
+       run: |
+        docker build . -t kapilrajhybrid/nginx:latest
          
      - name: Run Trivy vulnerability scanner
        uses: aquasecurity/trivy-action@0.28.0
