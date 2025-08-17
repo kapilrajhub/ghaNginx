@@ -29,10 +29,9 @@ jobs:
     runs-on: self-hosted
     needs: build_and_push
     steps:
-      - name: Configure kubeconfig
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
+    # - name: Configure kubeconfig
+    #    run: |
+    #      echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
      
       - name: Deploy Application in Kubernetes Cluster
         run: |  
