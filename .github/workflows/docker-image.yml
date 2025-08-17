@@ -3,20 +3,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  sonar_scan:
-    runs-on: self-hosted
-    steps:
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        with:
-          projectBaseDir: . # Or the specific directory containing your Nginx-related code
-
   build_and_push:
     runs-on: self-hosted
-    needs: sonar_scan
     steps:
      - name: Build the Nginx Docker image
        run: |
