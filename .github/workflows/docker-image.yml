@@ -3,8 +3,31 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  sonar_scan:
     runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        # Disabling shallow clones is recommended for improving the relevancy of reporting
+        fetch-depth: 0
+    - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v5.0.0 # Ex: v4.1.0, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+        
+    - name: SonarQube Quality Gate check
+      id: sonarqube-quality-gate-check
+      uses: sonarsource/sonarqube-quality-gate-action@master
+      with:
+        pollingTimeoutSec: 600
+      env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}      
+
+  build_and_push:
+    runs-on: self-hosted
+    needs: sonar_scan
     steps:
      - name: Build the Nginx Docker image
        run: |
@@ -24,12 +47,16 @@ jobs:
        run: |
          docker login -u kapilrajhybrid -p ${{ secrets.DOCKER_HUB_TOKEN }}
          docker push kapilrajhybrid/nginx:latest
-
-     - name: Configure kubeconfig
-       run: |
-        mkdir -p $HOME/.kube
-        echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
+  
+  deploy:
+    runs-on: self-hosted
+    needs: build_and_push
+    steps:
+      - name: Configure kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
      
-     - name: Deploy Application in Kubernetes Cluster
-       run: |  
-         kubectl apply -f mynginxservice.yaml
+      - name: Deploy Application in Kubernetes Cluster
+        run: |  
+          kubectl apply -f mynginxservice.yaml
