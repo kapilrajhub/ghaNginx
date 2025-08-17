@@ -24,6 +24,11 @@ jobs:
        run: |
          docker login -u kapilrajhybrid -p ${{ secrets.DOCKER_HUB_TOKEN }}
          docker push kapilrajhybrid/nginx:latest
+
+     - name: Configure kubeconfig
+       run: |
+        mkdir -p $HOME/.kube
+        echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
      
      - name: Deploy Application in Kubernetes Cluster
        run: |  
