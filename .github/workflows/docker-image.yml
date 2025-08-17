@@ -1,0 +1,35 @@
+name: Nginx Build CI
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+     - name: Build the Nginx Docker image
+       run: |
+        docker build . -t kapilrajhybrid/nginx:latest
+         
+     - name: Run Trivy vulnerability scanner
+       uses: aquasecurity/trivy-action@0.28.0
+       with:
+         image-ref: 'kapilrajhybrid/nginx:latest'
+         format: 'table'
+         exit-code: '1'
+         ignore-unfixed: true
+         vuln-type: 'os,library'
+         severity: 'CRITICAL,HIGH'
+         
+     - name: Publish image to Docker Hub 
+       run: |
+         docker login -u kapilrajhybrid -p ${{ secrets.DOCKER_HUB_TOKEN }}
+         docker push kapilrajhybrid/nginx:latest
+
+     - name: Configure kubeconfig
+       run: |
+        mkdir -p $HOME/.kube
+        echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
+     
+     - name: Deploy Application in Kubernetes Cluster
+       run: |  
+         kubectl apply -f mynginxservice.yaml
